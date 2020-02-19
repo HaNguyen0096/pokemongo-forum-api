@@ -4,6 +4,8 @@ const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 const topicsRouter = require('./topics/topics-router')
+const threadsRouter = require('./threads/threads-router')
+const commentsRouter = require('./comments/comments-router')
 //const {CLIENT_ORIGIN} = require('./config')
 
 const app = express()
@@ -21,6 +23,8 @@ app.use(
 app.use(helmet())
 
 app.use('/topics', topicsRouter)
+app.use('/threads', threadsRouter)
+app.use('/comments', commentsRouter)
 
 app.get('/', (req, res) => {
   res.send('Hello, world!')
