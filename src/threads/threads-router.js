@@ -11,7 +11,15 @@ threadsRouter
       req.app.get('db')
     )
       .then(threads => {
-        res.json(threads)
+        //res.json(threads)
+        res.json(threads.map(thread => ({
+          id: thread.id,
+          thread_title: thread.thread_title,
+          thread_content: thread.thread_content,
+          user_id: thread.user_id,
+          topic_id: thread.topic_id,
+          modified: new Date(thread.modified)
+        })))
       })
       .catch(next)
   })
@@ -30,7 +38,7 @@ threadsRouter
       .then(thread => {
         res
           .status(201)
-          .location(path.posix.join(req.originalUrl, `/${thread.id}`))
+          .location(`/threads/${thread.id}`)
           .json(thread)
       })
       .catch(next)

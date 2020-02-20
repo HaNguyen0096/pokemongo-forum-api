@@ -1,9 +1,32 @@
+function makeUsersArray(){
+  return [
+    {
+      id: 1,
+      username: 'user1',
+      password: 'pass1',
+      name: 'user1'
+    },
+    {
+      id: 2,
+      username: 'user2',
+      password: 'pass2',
+      name: 'user2'
+    },
+    {
+      id: 3,
+      username: 'user3',
+      password: 'pass3',
+      name: 'user3'
+    }
+  ]
+}
+
 function makeTopicsArray(){
   return [
     {
       id: 1,
       topic_name: 'General',
-      topic_content: 'General discussion about Pokemon Go.'
+      topic_content: 'General discussion about Pokemon Go!.'
     },
     {
       id: 2,
@@ -28,13 +51,49 @@ function makeTopicsArray(){
   ]
 }
 
+function makeThreadsArray(user, topic) {
+  return [
+    {
+      id: 1,
+      thread_title: 'events',
+      thread_content: 'When is Valentine event start?',
+      user_id: user[0].id,
+      topic_id: topic[0].id,
+      modified: '2020-02-22T21:28:32.615Z'
+    },
+    {
+      id: 2,
+      thread_title: 'hello',
+      thread_content: 'Add me',
+      user_id: user[1].id,
+      topic_id: topic[1].id,
+      modified: '2020-03-22T20:28:32.615Z'
+    }
+  ]
+}
+
+// function makeThread() {
+//   const testUsers = makeUsersArray()
+//   const testTopics = makeTopicsArray()
+//   const testThreads = makeThreadsArray(testUsers, testTopics)
+//   return testThreads
+// }
+
+// function seedThreadTable(){
+
+// }
+
 function cleanTables(db) {
   return db.raw(
     `TRUNCATE comments, threads, topics, users RESTART IDENTITY CASCADE`
   )
 }
 
+
 module.exports = {
   makeTopicsArray,
+  makeThreadsArray,
+  makeUsersArray,
+  // makeThread,
   cleanTables,
 }

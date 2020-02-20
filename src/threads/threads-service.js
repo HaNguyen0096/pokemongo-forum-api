@@ -10,9 +10,8 @@ const threadsService = {
       .insert(newThread)
       .into('threads')
       .returning('*')
-      .then(rows => {
-        return rows[0]
-      })
+      .then(([thread]) => thread)
+      .then(thread => threadsService.getById(knex, thread.id))
   },
   getById(knex, id) {
     return knex.from('threads').select('*').where('id', id).first()
