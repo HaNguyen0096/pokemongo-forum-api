@@ -16,8 +16,8 @@ commentsRouter
       .catch(next)
   })
   .post(jsonParser, (req, res, next) => {
-    const { content, thread_id } = req.body
-    const newComment = { content, thread_id }
+    const { content, thread_id, user_id=1 } = req.body
+    const newComment = { content, thread_id, user_id }
     for (const [key, value] of Object.entries(newComment))
       if (value == null)
         return res.status(400).json({
@@ -28,10 +28,10 @@ commentsRouter
       newComment
     )
       .then(comment => {
-        res
-          .status(201)
-          .location(path.posix.join(req.originalUrl, `/${comment.id}`))
-          .json(comment)
+      res
+        .status(201)
+        .location(`/comments/${comment.id}`)
+        .json(comment)
       })
       .catch(next)
   })

@@ -8,13 +8,13 @@ VALUES
   ('Gyms & Raids', 'Post strategy for gym defend and raid battle here.'),
   ('PvP', 'Place for PvP discussion.');
 
-INSERT INTO users (username, password, name)
+INSERT INTO users (username, password, name, image)
 VALUES
-  ('user1', 'user1', 'user1'),
-  ('user2', 'user2', 'user2'),
-  ('user3', 'user3', 'user3'),
-  ('user4', 'user4', 'user4'),
-  ('user5', 'user5', 'user5');
+  ('user1', 'user1', 'user1', 'https://img.pokemondb.net/artwork/charmander.jpg'),
+  ('user2', 'user2', 'user2', 'https://img.pokemondb.net/artwork/bulbasaur.jpg'),
+  ('user3', 'user3', 'user3', 'https://img.pokemondb.net/artwork/squirtle.jpg'),
+  ('user4', 'user4', 'user4', 'https://img.pokemondb.net/artwork/caterpie.jpg'),
+  ('user5', 'user5', 'user5', 'https://img.pokemondb.net/artwork/weedle.jpg');
 
 INSERT INTO threads (thread_title, thread_content, user_id, topic_id)
 VALUES

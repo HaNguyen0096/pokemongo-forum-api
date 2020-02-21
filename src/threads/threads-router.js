@@ -24,8 +24,8 @@ threadsRouter
       .catch(next)
   })
   .post(jsonParser, (req, res, next) => {
-    const { thread_title, thread_content, topic_id } = req.body
-    const newThread = { thread_title, thread_content, topic_id }
+    const { thread_title, thread_content, topic_id, user_id=1 } = req.body
+    const newThread = { thread_title, thread_content, topic_id, user_id }
     for (const [key, value] of Object.entries(newThread))
       if (value == null)
         return res.status(400).json({
