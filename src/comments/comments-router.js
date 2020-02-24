@@ -30,7 +30,7 @@ commentsRouter
       .then(comment => {
       res
         .status(201)
-        .location(`/comments/${comment.id}`)
+        .location(path.posix.join(req.originalUrl, `/${comments.id}`))
         .json(comment)
       })
       .catch(next)

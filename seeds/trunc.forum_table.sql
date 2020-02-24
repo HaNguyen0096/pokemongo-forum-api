@@ -1,0 +1,1 @@
+TRUNCATE comments, threads, topics, users RESTART IDENTITY CASCADE;

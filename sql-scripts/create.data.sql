@@ -15,7 +15,8 @@ CREATE TABLE users (
     username TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     name TEXT NOT NULL,
-    image TEXT
+    image TEXT,
+    date_created TIMESTAMP DEFAULT now() NOT NULL
 );
 
 

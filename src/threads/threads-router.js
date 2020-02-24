@@ -1,6 +1,6 @@
 const express = require('express')
 const threadsService = require('./threads-service')
-
+const path = require('path')
 const threadsRouter = express.Router()
 const jsonParser = express.json()
 
@@ -10,17 +10,9 @@ threadsRouter
     threadsService.getAllThreads(
       req.app.get('db')
     )
-      .then(threads => {
-        //res.json(threads)
-        res.json(threads.map(thread => ({
-          id: thread.id,
-          thread_title: thread.thread_title,
-          thread_content: thread.thread_content,
-          user_id: thread.user_id,
-          topic_id: thread.topic_id,
-          modified: new Date(thread.modified)
-        })))
-      })
+    .then(threads => {
+      res.json(threads.map(thread => (threadsService.serializeThread(thread))))
+    })
       .catch(next)
   })
   .post(jsonParser, (req, res, next) => {
@@ -38,8 +30,8 @@ threadsRouter
       .then(thread => {
         res
           .status(201)
-          .location(`/threads/${thread.id}`)
-          .json(thread)
+          .location(path.posix.join(req.originalUrl, `/${thread.id}`))
+          .json(threadsService.serializeThread(thread))
       })
       .catch(next)
   })
@@ -55,7 +47,7 @@ threadsRouter
             error: { message: `Thread doesn't exist` }
           })
         }
-        res.json(thread)
+        res.json(threadsService.serializeThread(thread))
       })
       .catch(next)
   })
@@ -76,7 +68,7 @@ threadsRouter
     const knexInstance = req.app.get('db')
     threadsService.getCommentsForThread(knexInstance, req.params.thread_id)
       .then(comments => {
-        res.json(comments)
+        res.json(comments.map(comment => (threadsService.serializecomment(comment))))
       })
       .catch(next)
   })

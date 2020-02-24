@@ -1,3 +1,5 @@
+const xss = require('xss')
+
 const threadsService = {
   getAllThreads(knex) {
     return knex.select('*').from('threads')
@@ -36,6 +38,28 @@ const threadsService = {
     )
       .from('comments')
       .where('comments.thread_id', thread_id)
+  },
+
+
+  serializeThread(thread) {
+    return {
+      id: thread.id,
+      thread_title: xss(thread.thread_title),
+      thread_content: xss(thread.thread_content),
+      user_id: thread.user_id,
+      topic_id: thread.topic_id,
+      modified: thread.modified,
+    }
+  },
+
+  serializecomment(comment) {
+    return {
+      id: comment.id,
+      content: xss(comment.content),
+      user_id: comment.user_id,
+      thread_id: comment.thread_id,
+      modified: comment.modified,
+    }
   },
 }
 

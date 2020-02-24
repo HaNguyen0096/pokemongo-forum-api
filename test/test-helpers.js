@@ -72,16 +72,24 @@ function makeThreadsArray(user, topic) {
   ]
 }
 
-// function makeThread() {
-//   const testUsers = makeUsersArray()
-//   const testTopics = makeTopicsArray()
-//   const testThreads = makeThreadsArray(testUsers, testTopics)
-//   return testThreads
-// }
-
-// function seedThreadTable(){
-
-// }
+function makeCommentsArray(user, thread) {
+  return [
+    {
+      id: 1,
+      content: 'test 1',
+      user_id: user[0].id,
+      thread_id: thread[0].id,
+      modified: '2020-02-22T21:28:32.615Z'
+    },
+    {
+      id: 2,
+      content: 'test 2',
+      user_id: user[0].id,
+      thread_id: thread[0].id,
+      modified: '2020-03-22T21:28:32.615Z'
+    }
+  ]
+}
 
 function cleanTables(db) {
   return db.raw(
@@ -94,6 +102,6 @@ module.exports = {
   makeTopicsArray,
   makeThreadsArray,
   makeUsersArray,
-  // makeThread,
+  makeCommentsArray,
   cleanTables,
 }

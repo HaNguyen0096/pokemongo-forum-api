@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
@@ -6,6 +7,7 @@ const { NODE_ENV } = require('./config')
 const topicsRouter = require('./topics/topics-router')
 const threadsRouter = require('./threads/threads-router')
 const commentsRouter = require('./comments/comments-router')
+const usersRouter = require('./users/users-router')
 //const {CLIENT_ORIGIN} = require('./config')
 
 const app = express()
@@ -22,9 +24,10 @@ app.use(
 );
 app.use(helmet())
 
-app.use('/topics', topicsRouter)
-app.use('/threads', threadsRouter)
-app.use('/comments', commentsRouter)
+app.use('/api/topics', topicsRouter)
+app.use('/api/threads', threadsRouter)
+app.use('/api/comments', commentsRouter)
+// app.use('/users', usersRouter)
 
 app.get('/', (req, res) => {
   res.send('Hello, world!')

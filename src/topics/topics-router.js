@@ -2,7 +2,6 @@ const express = require('express')
 const topicsService = require('./topics-service')
 
 const topicsRouter = express.Router()
-//const jsonParser = express.json()
 
 topicsRouter
   .route('/')
@@ -11,7 +10,7 @@ topicsRouter
       req.app.get('db')
     )
       .then(topics => {
-        res.json(topics)
+        res.json(topics.map(topic =>(topicsService.serializeTopic(topic))))
       })
       .catch(next)
   })
@@ -27,7 +26,7 @@ topicsRouter
             error: { message: `Topic doesn't exist` }
           })
         }
-        res.json(topic)
+        res.json(topicsService.serializeTopic(topic))
       })
       .catch(next)
   })
@@ -43,7 +42,7 @@ topicsRouter
             error: { message: `There is no thread` }
           })
         }
-        res.json(threads)
+        res.json(threads.map(thread => (topicsService.serializeThread(thread))))
       })
       .catch(next)
   })
