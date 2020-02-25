@@ -8,7 +8,7 @@ const topicsRouter = require('./topics/topics-router')
 const threadsRouter = require('./threads/threads-router')
 const commentsRouter = require('./comments/comments-router')
 const usersRouter = require('./users/users-router')
-//const {CLIENT_ORIGIN} = require('./config')
+const {CLIENT_ORIGIN} = require('./config')
 
 const app = express()
 
@@ -19,7 +19,7 @@ app.use(morgan((NODE_ENV === 'production') ? 'tiny' : 'common', {
 
 app.use(
     cors({
-        //origin: CLIENT_ORIGIN
+        origin: CLIENT_ORIGIN
     })
 );
 app.use(helmet())

@@ -1,6 +1,6 @@
 const express = require('express')
 const commentsService = require('./comments-service')
-
+const path = require('path')
 const commentsRouter = express.Router()
 const jsonParser = express.json()
 
@@ -30,7 +30,7 @@ commentsRouter
       .then(comment => {
       res
         .status(201)
-        .location(path.posix.join(req.originalUrl, `/${comments.id}`))
+        .location(path.posix.join(req.originalUrl, `/${comment.id}`))
         .json(comment)
       })
       .catch(next)
