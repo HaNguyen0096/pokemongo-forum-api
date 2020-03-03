@@ -33,7 +33,6 @@ const threadsService = {
     .select(
       'comments.id',
       'comments.content',
-      'comments.likes',
       'comments.user_id',
       'comments.modified',
     )

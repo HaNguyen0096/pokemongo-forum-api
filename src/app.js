@@ -18,7 +18,9 @@ app.use(morgan((NODE_ENV === 'production') ? 'tiny' : 'common', {
 
 
 app.use(
-    cors()
+  cors({
+    origin: CLIENT_ORIGIN
+})
 );
 app.use(helmet())
 
