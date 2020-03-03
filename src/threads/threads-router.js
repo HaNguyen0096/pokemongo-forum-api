@@ -61,6 +61,26 @@ threadsRouter
       })
       .catch(next)
   })
+  .patch(jsonParser, (req, res, next) => {
+    const { thread_title, thread_content} = req.body
+    const threadToUpdate = { thread_title, thread_content}
+
+    for (const [key, value] of Object.entries(threadToUpdate))
+      if (value == null)
+        return res.status(400).json({
+          error: { message: `Missing '${key}' in request body` }
+        })
+
+    threadsService.updateThread(
+      req.app.get('db'),
+      req.params.thread_id,
+      threadToUpdate
+    )
+      .then(numRowsAffected => {
+        res.status(204).end()
+      })
+      .catch(next)
+  })
 
 threadsRouter
   .route('/:thread_id/comments')

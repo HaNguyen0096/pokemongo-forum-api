@@ -17,6 +17,7 @@ const topicsService = {
         'threads.id',
         'threads.thread_title',
         'threads.thread_content',
+        'threads.likes',
         'threads.user_id',
         'threads.modified',
       )
@@ -38,6 +39,7 @@ const topicsService = {
       id: thread.id,
       thread_title: xss(thread.thread_title),
       thread_content: xss(thread.thread_content),
+      likes: thread.likes,
       user_id: thread.user_id,
       topic_id: thread.topic_id,
       modified: thread.modified,

@@ -33,6 +33,7 @@ const threadsService = {
     .select(
       'comments.id',
       'comments.content',
+      'comments.likes',
       'comments.user_id',
       'comments.modified',
     )
@@ -46,6 +47,7 @@ const threadsService = {
       id: thread.id,
       thread_title: xss(thread.thread_title),
       thread_content: xss(thread.thread_content),
+      likes: thread.likes,
       user_id: thread.user_id,
       topic_id: thread.topic_id,
       modified: thread.modified,
@@ -56,6 +58,7 @@ const threadsService = {
     return {
       id: comment.id,
       content: xss(comment.content),
+      likes: comment.likes,
       user_id: comment.user_id,
       thread_id: comment.thread_id,
       modified: comment.modified,

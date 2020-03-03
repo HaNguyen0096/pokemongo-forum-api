@@ -61,6 +61,27 @@ commentsRouter
       })
       .catch(next)
   })
+  .patch(jsonParser, (req, res, next) => {
+    const { content} = req.body
+    const commentToUpdate = { content}
+
+    for (const [key, value] of Object.entries(commentToUpdate))
+      if (value == null)
+        return res.status(400).json({
+          error: { message: `Missing '${key}' in request body` }
+        })
+
+    commentsService.updateComment(
+      req.app.get('db'),
+      req.params.comment_id,
+      commentToUpdate
+    )
+      .then(numRowsAffected => {
+        res.status(204).end()
+      })
+      .catch(next)
+  })
+
 
 
 
