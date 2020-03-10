@@ -8,7 +8,7 @@ describe(`Topic Endpoint`, function(){
   before('make knex instance', () => {
     db = knex({
       client: 'pg',
-      connection: process.env.TEST_DB_URL,
+      connection: process.env.TEST_DATABASE_URL,
     })
     app.set('db', db)
   })
@@ -100,44 +100,78 @@ describe(`Topic Endpoint`, function(){
   })
 
 
-  // describe(`POST /threads`, () => {
-  //   before('clean the table', () => helpers.cleanTables(db))
-  //   context('Insert threads', () => {
-  //     const testUser = helpers.makeUsersArray()
-  //     const testTopic = helpers.makeTopicsArray()
-  //     const testThreads = helpers.makeThreadsArray(testUser, testTopic)
+  describe(`POST /api/threads`, () => {
+    before('clean the table', () => helpers.cleanTables(db))
+    context('Insert threads', () => {
+      const testUser = helpers.makeUsersArray()
+      const testTopic = helpers.makeTopicsArray()
+      const testThreads = helpers.makeThreadsArray(testUser, testTopic)
       
-  //     beforeEach('insert threads', () => {
-  //       return db.transaction(async t => {
-  //         await t.into('users').insert(testUser)
-  //         await t.into('topics').insert(testTopic)
-  //         await t.into('threads').insert(testThreads)
-  //       })
-  //     })
+      beforeEach('insert threads', () => {
+        return db.transaction(async t => {
+          await t.into('users').insert(testUser)
+          await t.into('topics').insert(testTopic)
+          await t.into('threads').insert(testThreads)
+        })
+      })
   
-  //     it('create new thread, response with 201 and the new Thread', () => {
-  //       const newThread = {
-  //         thread_title: 'event',
-  //         thread_content: 'When is Valentine event start?',
-  //         user_id: 1,
-  //         topic_id: 1
-  //       }
-  //       return supertest(app)
-  //         .post('/threads')
-  //         .send(newThread)
-  //         .expect(201)
-  //         .expect(res => {
-  //           expect(res.body).to.have.property('id')
-  //           expect(res.body.thread_title).to.eql(newThread.thread_title)
-  //           expect(res.body.thread_content).to.eql(newThread.thread_content)
-  //           expect(res.body.user_id).to.eql(newThread.user_id)
-  //           expect(res.body.topic_id).to.eql(testThread.topic_id)
-  //           expect(res.headers.location).to.eql(`/threads/${res.body.id}`)
-  //           const expectedDate = new Date().toLocaleString()
-  //           const actualDate = new Date(res.body.modified).toLocaleString()
-  //           expect(actualDate).to.eql(expectedDate)
-  //         })
-  //     })
-  //   })
-  // })
+      it('create new thread, response with 201 and the new Thread', () => {
+        const newThread = {
+          thread_title: 'event',
+          thread_content: 'When is Valentine event start?',
+          user_id: 1,
+          topic_id: 1
+        }
+        return supertest(app)
+          .post('/api/threads')
+          .send(newThread)
+          .expect(201)
+          .expect(res => {
+            expect(res.body).to.have.property('id')
+            expect(res.body.thread_title).to.eql(newThread.thread_title)
+            expect(res.body.thread_content).to.eql(newThread.thread_content)
+            expect(res.body.user_id).to.eql(newThread.user_id)
+            expect(res.body.topic_id).to.eql(testThread.topic_id)
+            expect(res.headers.location).to.eql(`/threads/${res.body.id}`)
+            const expectedDate = new Date().toLocaleString()
+            const actualDate = new Date(res.body.modified).toLocaleString()
+            expect(actualDate).to.eql(expectedDate)
+          })
+      })
+    })
+  })
+
+  describe(`DELETE /api/threads/:thread_id`, () => {
+    before('clean the table', () => helpers.cleanTables(db))
+    context(`Given no thread`, () => {
+      it(`responds 404 thread doesn't exist`, () => {
+        return supertest(app)
+          .delete(`/api/threads/:thread_id`)
+          .expect(404, {
+            error: { message: `Thread Not Found` }
+          })
+      })
+    })
+    context('Given there are threads in database', () => {
+      const testUser = helpers.makeUsersArray()
+      const testTopic = helpers.makeTopicsArray()
+      const testThreads = helpers.makeThreadsArray(testUser, testTopic)
+      
+      beforeEach('insert threads', () => {
+        return db.transaction(async t => {
+          await t.into('users').insert(testUser)
+          await t.into('topics').insert(testTopic)
+          await t.into('threads').insert(testThreads)
+        })
+      })
+  
+      it('remove thread by id', () => {
+        const idToRemove = 1
+        const expectedThreads = testThreads.filter(th => th.id !== idToRemove)
+        return supertest(app)
+          .delete('/api/threads/${idToRemove}')
+          .expect(204, expectedThreads)
+      })
+    })
+  })
 })
