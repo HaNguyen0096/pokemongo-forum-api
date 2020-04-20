@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
+const authRouter = require('./auth/auth-router')
 const topicsRouter = require('./topics/topics-router')
 const threadsRouter = require('./threads/threads-router')
 const commentsRouter = require('./comments/comments-router')
@@ -23,11 +24,11 @@ app.use(
 })
 );
 app.use(helmet())
-
+app.use('/api/auth', authRouter)
 app.use('/api/topics', topicsRouter)
 app.use('/api/threads', threadsRouter)
 app.use('/api/comments', commentsRouter)
-// app.use('/users', usersRouter)
+app.use('/users', usersRouter)
 
 app.get('/', (req, res) => {
   res.send('Hello, world!')
