@@ -10,7 +10,7 @@ topicsRouter
       req.app.get('db')
     )
       .then(topics => {
-        res.json(topics.map(topic =>(topicsService.serializeTopic(topic))))
+        res.json(topicsService.serializeTopics(topics))
       })
       .catch(next)
   })
@@ -42,7 +42,7 @@ topicsRouter
             error: { message: `There is no thread` }
           })
         }
-        res.json(threads.map(thread => (topicsService.serializeThread(thread))))
+        res.json(topicsService.serializeThreads(threads))
       })
       .catch(next)
   })

@@ -28,7 +28,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/topics', topicsRouter)
 app.use('/api/threads', threadsRouter)
 app.use('/api/comments', commentsRouter)
-app.use('/users', usersRouter)
+app.use('/api/users', usersRouter)
 
 app.get('/', (req, res) => {
   res.send('Hello, world!')

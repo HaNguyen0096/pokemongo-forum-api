@@ -1,8 +1,31 @@
 const xss = require('xss')
-
+const Treeize = require('treeize')
 const threadsService = {
   getAllThreads(knex) {
-    return knex.select('*').from('threads')
+    return knex
+      .from('threads AS th')
+      .select(
+        'th.id',
+        'th.thread_title',
+        'th.thread_content',
+        'th.topic_id',
+        'th.modified',
+        ...userFields,
+        knex.raw(
+          `count(DISTINCT cmt) AS number_of_comments`
+        ),
+      )
+      .leftJoin(
+        'comments AS cmt',
+        'th.id',
+        'cmt.thread_id',
+      )
+      .leftJoin(
+        'users AS usr',
+        'th.user_id',
+        'usr.id',
+      )
+      .groupBy('th.id', 'usr.id')
   },
   test(knex){
     return knex.select('comments.content').from('comments')
@@ -40,16 +63,22 @@ const threadsService = {
       .where('comments.thread_id', thread_id)
   },
 
+  serializeThreads(threads) {
+    return threads.map(this.serializeThread)
+  },
 
   serializeThread(thread) {
+    const threadTree = new Treeize()
+    const threadData = threadTree.grow([ thread ]).getData()[0]
+
     return {
-      id: thread.id,
-      thread_title: xss(thread.thread_title),
-      thread_content: xss(thread.thread_content),
-      likes: thread.likes,
-      user_id: thread.user_id,
+      id: threadData.id,
+      thread_title: xss(threadData.thread_title),
+      thread_content: xss(threadData.thread_content),
       topic_id: thread.topic_id,
       modified: thread.modified,
+      user: threadData.user || {},
+      number_of_comments: Number(threadData.number_of_comments) || 0,
     }
   },
 
@@ -64,5 +93,13 @@ const threadsService = {
     }
   },
 }
+
+const userFields = [
+  'usr.id AS user:id',
+  'usr.user_name AS user:user_name',
+  'usr.full_name AS user:full_name',
+  'usr.date_created AS user:date_created',
+  'usr.date_modified AS user:date_modified',
+]
 
 module.exports = threadsService

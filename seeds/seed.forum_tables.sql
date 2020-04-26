@@ -1,5 +1,8 @@
 BEGIN;
 
+
+TRUNCATE topics, threads, users, comments RESTART IDENTITY CASCADE;
+
 INSERT INTO topics (topic_name, topic_content)
 VALUES
   ('General', 'General discussion about Pokemon Go.'),
@@ -8,13 +11,13 @@ VALUES
   ('Gyms & Raids', 'Post strategy for gym defend and raid battle here.'),
   ('PvP', 'Place for PvP discussion.');
 
-INSERT INTO users (username, password, name, image)
+INSERT INTO users (user_name, password, full_name, image)
 VALUES
-  ('user1', 'user1', 'user1', 'https://img.pokemondb.net/artwork/charmander.jpg'),
-  ('user2', 'user2', 'user2', 'https://img.pokemondb.net/artwork/bulbasaur.jpg'),
-  ('user3', 'user3', 'user3', 'https://img.pokemondb.net/artwork/squirtle.jpg'),
-  ('user4', 'user4', 'user4', 'https://img.pokemondb.net/artwork/caterpie.jpg'),
-  ('user5', 'user5', 'user5', 'https://img.pokemondb.net/artwork/weedle.jpg');
+  ('charmander', 'charmander', 'charmander', 'https://img.pokemondb.net/artwork/charmander.jpg'),
+  ('bulbasaur', 'bulbasaur', 'bulbasaur', 'https://img.pokemondb.net/artwork/bulbasaur.jpg'),
+  ('squirtle', 'squirtle', 'squirtle', 'https://img.pokemondb.net/artwork/squirtle.jpg'),
+  ('caterpie', 'caterpie', 'caterpie', 'https://img.pokemondb.net/artwork/caterpie.jpg'),
+  ('weedle', 'weedle', 'weedle', 'https://img.pokemondb.net/artwork/weedle.jpg');
 
 INSERT INTO threads (thread_title, thread_content, user_id, topic_id)
 VALUES

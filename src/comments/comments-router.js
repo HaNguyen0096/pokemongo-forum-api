@@ -3,6 +3,7 @@ const commentsService = require('./comments-service')
 const path = require('path')
 const commentsRouter = express.Router()
 const jsonParser = express.json()
+const { requireAuth } = require('../middleware/jwt-auth')
 
 commentsRouter
   .route('/')
@@ -15,14 +16,16 @@ commentsRouter
       })
       .catch(next)
   })
-  .post(jsonParser, (req, res, next) => {
-    const { content, thread_id, user_id=1 } = req.body
-    const newComment = { content, thread_id, user_id }
+  .post(requireAuth, jsonParser, (req, res, next) => {
+    const { content, thread_id} = req.body
+    const newComment = { content, thread_id}
     for (const [key, value] of Object.entries(newComment))
       if (value == null)
         return res.status(400).json({
           error: { message: `Missing '${key}' in request body` }
         })
+
+    newComment.user_id = req.user.id
     commentsService.insertComment(
       req.app.get('db'),
       newComment
@@ -38,6 +41,7 @@ commentsRouter
 
 commentsRouter
   .route('/:comment_id')
+  .all(requireAuth)
   .get((req, res, next) => {
     const knexInstance = req.app.get('db')
     commentsService.getById(knexInstance, req.params.comment_id)

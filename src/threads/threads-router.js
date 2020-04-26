@@ -3,6 +3,7 @@ const threadsService = require('./threads-service')
 const path = require('path')
 const threadsRouter = express.Router()
 const jsonParser = express.json()
+const { requireAuth } = require('../middleware/jwt-auth')
 
 threadsRouter
   .route('/')
@@ -11,18 +12,21 @@ threadsRouter
       req.app.get('db')
     )
     .then(threads => {
-      res.json(threads.map(thread => (threadsService.serializeThread(thread))))
+      res.json(threadsService.serializeThreads(threads))
     })
       .catch(next)
   })
-  .post(jsonParser, (req, res, next) => {
-    const { thread_title, thread_content, topic_id, user_id=1 } = req.body
-    const newThread = { thread_title, thread_content, topic_id, user_id }
+  .post(requireAuth, jsonParser, (req, res, next) => {
+    const { thread_title, thread_content, topic_id} = req.body
+    const newThread = { thread_title, thread_content, topic_id}
     for (const [key, value] of Object.entries(newThread))
       if (value == null)
         return res.status(400).json({
           error: { message: `Missing '${key}' in request body` }
         })
+
+    newThread.user_id = req.user.id
+
     threadsService.insertThread(
       req.app.get('db'),
       newThread
@@ -51,6 +55,10 @@ threadsRouter
       })
       .catch(next)
   })
+
+threadsRouter
+  .route('/:thread_id')
+  .all(requireAuth)
   .delete((req, res, next) => {
     threadsService.deleteThread(
       req.app.get('db'),
